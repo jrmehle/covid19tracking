@@ -1,0 +1,28 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    chronic (0.10.2)
+    colorize (0.8.1)
+    gruff (0.7.0)
+      rmagick (~> 2.13, >= 2.13.4)
+    mini_portile2 (2.4.0)
+    nokogiri (1.10.9)
+      mini_portile2 (~> 2.4.0)
+    rmagick (2.16.0)
+    sqlite3 (1.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  chronic
+  colorize
+  gruff
+  nokogiri
+  sqlite3
+
+RUBY VERSION
+   ruby 2.6.5p114
+
+BUNDLED WITH
+   2.1.4
