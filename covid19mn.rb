@@ -46,8 +46,10 @@ class Covid19mn
     as_of_date_p = page.css("p:contains(\"As of\")")
     as_of_date = Chronic.parse(as_of_date_p.text.gsub(/^As\ of\ /, '')).strftime('%F')
 
-    patients_tested_li = page.css("li:contains(\"Approximate number of patients tested\")")
-    patients_tested = patients_tested_li.text.scan(/\d/).join('').to_i
+    # MN no longer reporting tested count
+    # patients_total_li = page.css("li:contains(\"Approximate number of patients tested\")")
+    # patients_total = patients_total_li.text.scan(/\d/).join('').to_i
+    patients_total = nil
 
     patients_positive_li = page.css("li:contains(\"Positive:\")")
     patients_positive = patients_positive_li.text.scan(/\d/).join('').to_i
@@ -55,13 +57,15 @@ class Covid19mn
     patient_deaths_li = page.css("li:contains(\"Deaths:\")")
     patient_deaths = patient_deaths_li.text.scan(/\d/).join('').to_i
 
-    patients_negative = patients_tested - patients_positive
+    # TODO: retreive and store results by county too
 
-    patients_pending = 0
+    patients_negative = nil
 
-    patients_recovered = 0
+    patients_pending = nil
 
-    { patients_total: patients_tested,
+    patients_recovered = nil
+
+    { patients_total: patients_total,
       patients_positive: patients_positive,
       patients_negative: patients_negative,
       patients_pending: patients_pending,
@@ -121,18 +125,15 @@ class Covid19mn
   def do_mn
     results = scrape_mn_health_dept_page
 
-    puts "Tested: #{results[:patients_total]}"
     puts "Positive: #{results[:patients_positive]}"
-    puts "Negative: #{results[:patients_negative]}"
     puts "Deaths: #{results[:patient_deaths]}"
-    puts "Total: #{results[:patients_total]}"
     puts "As of #{results[:as_of_date]}"
 
     begin
       save_record(us_state: results[:us_state],
                   patients_tested_positive: results[:patients_positive],
                   patients_tested_negative: results[:patients_negative],
-                  patients_test_pending: results[:patients_pending].zero? ? nil : results[:patients_pending],
+                  patients_test_pending: results[:patients_pending],
                   patients_died: results[:patient_deaths],
                   patients_total: results[:patients_total],
                   record_date: results[:as_of_date])
